@@ -11,22 +11,8 @@ type Config struct {
 	fset *syntax.FileSet
 }
 
-func (c *Config) parseFiles() error {
-	c.fset = syntax.NewFileSet()
-
-	for _, f := range c.Files {
-		m, err := syntax.ParseModules(c.fset, f, nil, 0, nil)
-		if err != nil {
-			return err
-		}
-		c.Modules = append(c.Modules, m...)
-	}
-
-	return nil
-}
-
 func LoadFromFiles(files []string) error {
-    c := &Config{Files: files}
-    return c.parseFiles()
+	fset := syntax.NewFileSet()
+	_, err := parseFiles(fset, files)
+	return err
 }
-
