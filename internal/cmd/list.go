@@ -3,10 +3,19 @@ package cmd
 import (
 	"bufio"
 	"fmt"
+<<<<<<< HEAD
 	"github.com/nokia/ntt/ttcn3/loader"
 	"github.com/nokia/ntt/ttcn3/syntax"
 	"github.com/spf13/cobra"
 	"os"
+=======
+	"github.com/nokia/ntt/internal/loader"
+	"github.com/nokia/ntt/ttcn3/syntax"
+	"github.com/spf13/cobra"
+	"os"
+	"path/filepath"
+	"strings"
+>>>>>>> Add initial loader
 )
 
 var (
@@ -98,10 +107,43 @@ func list(cmd *cobra.Command, args []string) error {
 		return err
 	}
 
+<<<<<<< HEAD
 	pkg, err := conf.Load()
 	if err != nil {
 		return err
 	}
+=======
+	if len(sources) == 0 {
+		fmt.Fprintln(os.Stderr, "no TTCN-3 files found in", strings.Join(args, ", "))
+		os.Exit(1)
+	}
+
+	err = loader.LoadFromFiles(sources)
+	if err != nil {
+		syntax.PrintError(os.Stderr, err)
+	}
+
+	return nil
+}
+
+func filterSources(list []string) (sources []string, err error) {
+	for _, v := range list {
+		root := filepath.Clean(v)
+		err = filepath.Walk(root, func(path string, info os.FileInfo, err error) error {
+			if err != nil {
+				return err
+			}
+
+			if !info.Mode().IsRegular() {
+				return nil
+			}
+
+			if e := filepath.Ext(path); e == ".ttcn" || e == ".ttcn3" {
+				sources = append(sources, path)
+			}
+			return nil
+		})
+>>>>>>> Add initial loader
 
 	for _, m := range pkg.Modules {
 		var file string
