@@ -118,9 +118,13 @@ func list(cmd *cobra.Command, args []string) error {
 		os.Exit(1)
 	}
 
-	err = loader.LoadFromFiles(sources)
+	modules, err := loader.LoadFromFiles(sources)
 	if err != nil {
 		syntax.PrintError(os.Stderr, err)
+	}
+
+	for _, m := range modules {
+		fmt.Println(m.Name())
 	}
 
 	return nil
