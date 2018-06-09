@@ -260,6 +260,9 @@ func (p *parser) error(pos Pos, msg string) {
 		}
 	}
 
+	if p.scanner.Err != nil {
+		p.scanner.Err(epos, msg)
+	}
 	p.errors.Add(epos, msg)
 }
 
@@ -1802,6 +1805,10 @@ func (p *parser) parseFuncDecl() *FuncDecl {
 		p.parseTypeFormalPars()
 	}
 
+	if p.tok == MODIF {
+		x.Modif = p.consume()
+	}
+
 	x.Params = p.parseFormalPars()
 
 	if p.tok == RUNS {
@@ -1840,6 +1847,8 @@ func (p *parser) parseExtFuncDecl() *FuncDecl {
 	x := new(FuncDecl)
 	x.External = p.consume()
 	x.Kind = p.consume()
+	x.Name = p.parseIdent()
+
 	if p.tok == MODIF {
 		x.Modif = p.consume()
 	}

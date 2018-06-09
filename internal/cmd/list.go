@@ -124,7 +124,7 @@ func list(cmd *cobra.Command, args []string) error {
 	}
 
 	for _, m := range modules {
-		fmt.Println(m.Name())
+		fmt.Println("Name:", m.Name())
 	}
 
 	return nil

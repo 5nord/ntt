@@ -1,8 +1,10 @@
 package loader
 
 import (
+	"fmt"
 	"github.com/nokia/ntt/ttcn3/syntax"
 	"github.com/nokia/ntt/ttcn3/types"
+	"os"
 )
 
 func LoadFromFiles(files []string) ([]*types.Module, error) {
@@ -14,7 +16,12 @@ func LoadFromFiles(files []string) ([]*types.Module, error) {
 
 	var modules []*types.Module
 
-	var conf types.Config
+	conf := types.Config{
+		Error: func(err types.Error) {
+			fmt.Fprintln(os.Stderr, "\x1b[32m", err, "\x1b[0m")
+		},
+	}
+
 	for _, ast := range list {
 		m, err := conf.Check(fset, ast, nil)
 		if err != nil {
