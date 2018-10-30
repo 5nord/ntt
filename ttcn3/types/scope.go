@@ -24,10 +24,5 @@ func (s *Scope) Lookup(name string) Object {
 func NewScope(parent *Scope, pos, end syntax.Pos) *Scope {
 	s := &Scope{parent: parent, pos: pos, end: end}
 
-	// don't add children to Universe scope!
-	if parent != nil && parent != Universe {
-		parent.children = append(parent.children, s)
-	}
-
 	return s
 }
